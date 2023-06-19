@@ -4,9 +4,9 @@
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
-    "name": "USB-webcam",
+    "name": "USB webcam",
     "short_name": "webcam",
-    "description": "A PWA app for USB-webcam",
+    "description": "A PWA app for USB webcam",
     "icons": [
       {
         "src": "/icon-192x192.png",

@@ -7,7 +7,7 @@ import Head from 'next/head'
 import Webcam from "react-webcam";
 import React,{ useState, useRef, useCallback, useEffect} from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
-import { FloatButton } from 'antd';
+import { Button, FloatButton , Modal, Space} from 'antd';
 import { FullscreenOutlined, FullscreenExitOutlined,AudioOutlined,AudioMutedOutlined,VideoCameraOutlined} from '@ant-design/icons';
 
 
@@ -18,23 +18,16 @@ export default function Home() {
   const [height, setHeight] = useState(0)
   const [audio, setAudio] = useState(false)
   const [fullscreen, setFullscreen]=useState(false)
+  const [open, setOpen] = useState(false);
   const webcamRef = useRef(null);
   const handle = useFullScreenHandle();
 
 
-  const handleDevices = (deviceInfos:any)=>{
-    var videoDevices:Array<any>=[]
-    for (var i = 0; i !== deviceInfos.length; ++i) {
-      var deviceInfo:any = deviceInfos[i];
-      if (deviceInfo.kind === 'videoinput') {
-        // setDeviceId(deviceInfo.deviceId)
-        videoDevices.push(deviceInfo)
-      }
+  const handleDevices = (deviceInfos:Array<any>)=>{
+    if(deviceInfos.length!=devices.length){
+      setDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
     }
-    setDevices(videoDevices)
-
   }
-
 
 
   useEffect(() => {
@@ -47,7 +40,6 @@ export default function Home() {
     
     handleResize()
     navigator.mediaDevices.enumerateDevices().then(handleDevices)
-    
     return () => { 
       window.removeEventListener("resize", handleResize)
     }
@@ -68,38 +60,35 @@ export default function Home() {
       <Head>
         <title>USB webcam</title>
       </Head>
-      <FloatButton.Group
-        shape="square"
-        trigger="hover"
-        type="primary"
-        style={{ right: 74 }}
-        icon={<VideoCameraOutlined />}
-      >
-        {devices.map((device) => (
-          <FloatButton shape="square" description={device.label} onClick={()=>setDeviceId(device.deviceId)}/>
-      ))}
-      </FloatButton.Group>
+      
       <FloatButton.Group shape="square" style={{ right: 24, visibility:!fullscreen?"visible":"hidden"  }}>
-        <FloatButton icon={<FullscreenOutlined />} onClick={enterFullscreen} />
+        <FloatButton icon={<VideoCameraOutlined />} onClick={()=>setOpen(true)} />
         <FloatButton icon={audio?<AudioOutlined />:<AudioMutedOutlined/>} onClick={()=>setAudio(!audio)}/>
+        <FloatButton icon={<FullscreenOutlined />} onClick={enterFullscreen} />
       </FloatButton.Group>
+      <Modal
+          open={open&&!fullscreen}
+          onCancel={()=>setOpen(false)}
+          title="Camera"
+          footer={null}
+        >
+          <Space direction="vertical">
+             {devices.map((device) => (
+                <Button type={device.deviceId===deviceId?"dashed":"default"} onClick={()=>setDeviceId(device.deviceId)}>{device.label}</Button>
+              ))}
+
+             </Space>
+        </Modal>
 
       <FullScreen handle={handle}>
-        <FloatButton.Group
-          shape="square"
-          trigger="hover"
-          type="primary"
-          style={{ right: 74 }}
-          icon={<VideoCameraOutlined />}
-        >
-          {devices.map((device) => (
-            <FloatButton shape="square" description={device.label} onClick={()=>setDeviceId(device.deviceId)}/>
-        ))}
-        </FloatButton.Group>
+        
+
         <FloatButton.Group shape="square" style={{ right: 24, visibility:fullscreen?"visible":"hidden"  }}>
-          <FloatButton icon={<FullscreenExitOutlined />} onClick={exitFullscreen} />
           <FloatButton icon={audio?<AudioOutlined />:<AudioMutedOutlined/>} onClick={()=>setAudio(!audio)}/>
+          <FloatButton icon={<FullscreenExitOutlined />} onClick={exitFullscreen} />
         </FloatButton.Group>
+   
+       
         <Webcam ref={webcamRef} height={height} width={width} audio={audio} videoConstraints={{ deviceId:deviceId }}/>
       </FullScreen>
 
