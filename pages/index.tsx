@@ -28,10 +28,18 @@ export default function Home() {
 
 
 
-  const handleDevices = (deviceInfos:Array<any>)=>{
-    setVideoDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
-    setAudioDevices(deviceInfos.filter(({ kind }) => kind === "audioinput"))
-  }
+  // const handleDevices = (deviceInfos:Array<any>)=>{
+  //   setVideoDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
+  //   setAudioDevices(deviceInfos.filter(({ kind }) => kind === "audioinput"))
+  // }
+
+  const handleDevices = React.useCallback(
+    (    deviceInfos: Array<any>) =>{
+      setVideoDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
+      setAudioDevices(deviceInfos.filter(({ kind }) => kind === "audioinput"))
+    },
+    [setVideoDevices,setAudioDevices]
+  );
 
   useEffect(() => {
     function handleResize() {
@@ -81,14 +89,14 @@ export default function Home() {
           <Title level={5}>Video Input</Title>
             <Space direction="vertical">
               {videoDevices.map((device,i) => (
-                  <Button  type={device.deviceId===videoDeviceId?"dashed":"default"} onClick={()=>setVideoDeviceId(device.deviceId)}>{device.label}</Button>
+                  <Button key={"$i"} type={device.deviceId===videoDeviceId?"dashed":"default"} onClick={()=>setVideoDeviceId(device.deviceId)}>{device.label}</Button>
                 ))}
 
             </Space>
             <Title level={5}>Audio Input</Title>
             <Space direction="vertical">
               {audioDevices.map((device,i) => (
-                  <Button  type={device.deviceId===audioDeviceId?"dashed":"default"} onClick={()=>setAudioDeviceId(device.deviceId)}>{device.label}</Button>
+                  <Button key={"$i"} type={device.deviceId===audioDeviceId?"dashed":"default"} onClick={()=>setAudioDeviceId(device.deviceId)}>{device.label}</Button>
                 ))}
 
             </Space>
