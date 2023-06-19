@@ -1,6 +1,6 @@
 "use client"
 
-// todo  about fill/contain/cover pwa-offline
+// todo  about fill/contain/cover 
 
 import Image from 'next/image'
 import Webcam from "react-webcam";
@@ -28,24 +28,28 @@ export default function Home() {
 
 
 
-  // const handleDevices = (deviceInfos:Array<any>)=>{
-  //   setVideoDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
-  //   setAudioDevices(deviceInfos.filter(({ kind }) => kind === "audioinput"))
-  // }
+  const handleDevices = (deviceInfos:Array<any>)=>{
+    setVideoDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
+    setAudioDevices(deviceInfos.filter(({ kind }) => kind === "audioinput"))
+  }
 
-  const handleDevices = React.useCallback(
-    (    deviceInfos: Array<any>) =>{
-      setVideoDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
-      setAudioDevices(deviceInfos.filter(({ kind }) => kind === "audioinput"))
-    },
-    [setVideoDevices,setAudioDevices]
-  );
+  // const handleDevices = React.useCallback(
+  //   (    deviceInfos: Array<any>) =>{
+  //     setVideoDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
+  //     setAudioDevices(deviceInfos.filter(({ kind }) => kind === "audioinput"))
+  //   },
+  //   [setVideoDevices,setAudioDevices]
+  // );
 
   useEffect(() => {
     function handleResize() {
       setWidth(window.innerWidth )
       setHeight( window.innerHeight )
     }
+    // const handleDevices = (deviceInfos:Array<any>)=>{
+    //   setVideoDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
+    //   setAudioDevices(deviceInfos.filter(({ kind }) => kind === "audioinput"))
+    // }
     
     
     window.addEventListener("resize", handleResize)
@@ -55,7 +59,7 @@ export default function Home() {
     return () => { 
       window.removeEventListener("resize", handleResize)
     }
-  }, [setWidth,setHeight,handleDevices])
+  }, [setWidth,setHeight,handleDevices,setVideoDevices,setAudioDevices])
 
 
   function enterFullscreen(){
