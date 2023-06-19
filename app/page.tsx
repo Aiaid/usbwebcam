@@ -60,7 +60,6 @@ export default function Home() {
     <>
       <Head>
         <title>USB webcam</title>
-        <link rel="manifest" href="/manifest.json" />
       </Head>
       
       <FloatButton.Group shape="square" style={{ right: 24, visibility:!fullscreen?"visible":"hidden"  }}>
@@ -75,7 +74,7 @@ export default function Home() {
           footer={null}
         >
           <Space direction="vertical">
-             {devices.map((device) => (
+             {devices.map((device,i) => (
                 <Button type={device.deviceId===deviceId?"dashed":"default"} onClick={()=>setDeviceId(device.deviceId)}>{device.label}</Button>
               ))}
 
