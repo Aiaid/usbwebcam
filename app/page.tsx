@@ -1,13 +1,13 @@
 "use client"
 
-// todo !悬浮按钮 !静音 !选择摄像头 权限 !webapp about
+// todo  about fill/contain/cover pwa-offline
 
 import Image from 'next/image'
 import Webcam from "react-webcam";
 import React,{ useState, useRef, useCallback, useEffect} from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
-import { Button, FloatButton , Modal, Space, Typography} from 'antd';
-import { FullscreenOutlined, FullscreenExitOutlined,AudioOutlined,AudioMutedOutlined,VideoCameraOutlined} from '@ant-design/icons';
+import { Button, FloatButton , Modal, Space, Tabs, Typography} from 'antd';
+import { FullscreenOutlined,InfoCircleOutlined, FullscreenExitOutlined,AudioOutlined,AudioMutedOutlined,VideoCameraOutlined} from '@ant-design/icons';
 import Head from 'next/head';
 const { Title } = Typography;
 
@@ -22,6 +22,7 @@ export default function Home() {
   const [audio, setAudio] = useState(true)
   const [fullscreen, setFullscreen]=useState(false)
   const [open, setOpen] = useState(false);
+  const [about, setAbout] = useState(false);
   const webcamRef = useRef(null);
   const handle = useFullScreenHandle();
 
@@ -65,6 +66,7 @@ export default function Home() {
       </Head>
       
       <FloatButton.Group shape="square" style={{ right: 24, visibility:!fullscreen?"visible":"hidden"  }}>
+        <FloatButton icon={<InfoCircleOutlined />} onClick={()=>setAbout(true)} />
         <FloatButton icon={<VideoCameraOutlined />} onClick={()=>setOpen(true)} />
         <FloatButton icon={audio?<AudioOutlined />:<AudioMutedOutlined/>} onClick={()=>setAudio(!audio)}/>
         <FloatButton icon={<FullscreenOutlined />} onClick={enterFullscreen} />
@@ -93,6 +95,35 @@ export default function Home() {
           </Space>
           
         </Modal>
+        <Modal
+          open={about&&!fullscreen}
+          onCancel={()=>setAbout(false)}
+          // title="About"
+          footer={null}
+        >
+          <Tabs
+            defaultActiveKey="1"
+            centered
+            items={[ 
+              {
+                label: `About`,
+                key: "about",
+                children: `Content of Tab Pane 1`,
+              },
+              {
+                label: `FAQ`,
+                key: "faq",
+                children: `Content of Tab Pane 1`,
+              },
+              {
+                label: `LICENSE`,
+                key: "LICENSE",
+                children: `Content of Tab Pane 1`,
+              },
+            ]}
+          />
+          
+        </Modal>
 
       <FullScreen handle={handle}>
         
@@ -103,7 +134,7 @@ export default function Home() {
         </FloatButton.Group>
    
        
-        <Webcam ref={webcamRef} height={height} width={width} audio={audio} videoConstraints={{ deviceId:videoDeviceId }} audioConstraints={{ deviceId:audioDeviceId }}/>
+        <Webcam  ref={webcamRef} height={height} width={width} audio={audio} videoConstraints={{ deviceId:videoDeviceId }} audioConstraints={{ deviceId:audioDeviceId }}/>
       </FullScreen>
 
     
