@@ -3,12 +3,12 @@
 // todo !悬浮按钮 !静音 !选择摄像头 权限 !webapp about
 
 import Image from 'next/image'
-import Head from 'next/head'
 import Webcam from "react-webcam";
 import React,{ useState, useRef, useCallback, useEffect} from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { Button, FloatButton , Modal, Space} from 'antd';
 import { FullscreenOutlined, FullscreenExitOutlined,AudioOutlined,AudioMutedOutlined,VideoCameraOutlined} from '@ant-design/icons';
+import Head from 'next/head';
 
 
 export default function Home() {
@@ -23,17 +23,18 @@ export default function Home() {
   const handle = useFullScreenHandle();
 
 
-  const handleDevices = (deviceInfos:Array<any>)=>{
-    if(deviceInfos.length!=devices.length){
-      setDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
-    }
-  }
+
 
 
   useEffect(() => {
     function handleResize() {
       setWidth(Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0))
       setHeight(Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0))
+    }
+    const handleDevices = (deviceInfos:Array<any>)=>{
+      if(deviceInfos.length!=devices.length){
+        setDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
+      }
     }
     
     window.addEventListener("resize", handleResize)
@@ -43,7 +44,7 @@ export default function Home() {
     return () => { 
       window.removeEventListener("resize", handleResize)
     }
-  }, [setWidth,setHeight,handleDevices])
+  }, [setWidth,setHeight,setDevices])
 
 
   function enterFullscreen(){
@@ -59,6 +60,7 @@ export default function Home() {
     <>
       <Head>
         <title>USB webcam</title>
+        <link rel="manifest" href="/manifest.json" />
       </Head>
       
       <FloatButton.Group shape="square" style={{ right: 24, visibility:!fullscreen?"visible":"hidden"  }}>
