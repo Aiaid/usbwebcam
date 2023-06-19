@@ -24,18 +24,18 @@ export default function Home() {
 
 
 
-
+  const handleDevices = (deviceInfos:Array<any>)=>{
+    if(deviceInfos.length!=devices.length){
+      setDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
+    }
+  }
 
   useEffect(() => {
     function handleResize() {
       setWidth(Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0))
       setHeight(Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0))
     }
-    const handleDevices = (deviceInfos:Array<any>)=>{
-      if(deviceInfos.length!=devices.length){
-        setDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
-      }
-    }
+    
     
     window.addEventListener("resize", handleResize)
     
@@ -44,7 +44,7 @@ export default function Home() {
     return () => { 
       window.removeEventListener("resize", handleResize)
     }
-  }, [setWidth,setHeight,setDevices])
+  }, [setWidth,setHeight,handleDevices])
 
 
   function enterFullscreen(){
