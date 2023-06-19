@@ -6,17 +6,20 @@ import Image from 'next/image'
 import Webcam from "react-webcam";
 import React,{ useState, useRef, useCallback, useEffect} from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
-import { Button, FloatButton , Modal, Space} from 'antd';
+import { Button, FloatButton , Modal, Space, Typography} from 'antd';
 import { FullscreenOutlined, FullscreenExitOutlined,AudioOutlined,AudioMutedOutlined,VideoCameraOutlined} from '@ant-design/icons';
 import Head from 'next/head';
+const { Title } = Typography;
 
 
 export default function Home() {
-  const [deviceId, setDeviceId] = useState<any>(null);
-  const [devices, setDevices] = useState<Array<any>>([]);
+  const [videoDeviceId, setVideoDeviceId] = useState<any>(null);
+  const [videoDevices, setVideoDevices] = useState<Array<any>>([]);
+  const [audioDeviceId, setAudioDeviceId] = useState<any>(null);
+  const [audioDevices, setAudioDevices] = useState<Array<any>>([]);
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
-  const [audio, setAudio] = useState(false)
+  const [audio, setAudio] = useState(true)
   const [fullscreen, setFullscreen]=useState(false)
   const [open, setOpen] = useState(false);
   const webcamRef = useRef(null);
@@ -25,15 +28,14 @@ export default function Home() {
 
 
   const handleDevices = (deviceInfos:Array<any>)=>{
-    if(deviceInfos.length!=devices.length){
-      setDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
-    }
+    setVideoDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
+    setAudioDevices(deviceInfos.filter(({ kind }) => kind === "audioinput"))
   }
 
   useEffect(() => {
     function handleResize() {
-      setWidth(Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0))
-      setHeight(Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0))
+      setWidth(window.innerWidth )
+      setHeight( window.innerHeight )
     }
     
     
@@ -70,15 +72,26 @@ export default function Home() {
       <Modal
           open={open&&!fullscreen}
           onCancel={()=>setOpen(false)}
-          title="Camera"
+          // title="Camera"
           footer={null}
         >
           <Space direction="vertical">
-             {devices.map((device,i) => (
-                <Button type={device.deviceId===deviceId?"dashed":"default"} onClick={()=>setDeviceId(device.deviceId)}>{device.label}</Button>
-              ))}
+          <Title level={5}>Video Input</Title>
+            <Space direction="vertical">
+              {videoDevices.map((device,i) => (
+                  <Button  type={device.deviceId===videoDeviceId?"dashed":"default"} onClick={()=>setVideoDeviceId(device.deviceId)}>{device.label}</Button>
+                ))}
 
-             </Space>
+            </Space>
+            <Title level={5}>Audio Input</Title>
+            <Space direction="vertical">
+              {audioDevices.map((device,i) => (
+                  <Button  type={device.deviceId===audioDeviceId?"dashed":"default"} onClick={()=>setAudioDeviceId(device.deviceId)}>{device.label}</Button>
+                ))}
+
+            </Space>
+          </Space>
+          
         </Modal>
 
       <FullScreen handle={handle}>
@@ -90,7 +103,7 @@ export default function Home() {
         </FloatButton.Group>
    
        
-        <Webcam ref={webcamRef} height={height} width={width} audio={audio} videoConstraints={{ deviceId:deviceId }}/>
+        <Webcam ref={webcamRef} height={height} width={width} audio={audio} videoConstraints={{ deviceId:videoDeviceId }} audioConstraints={{ deviceId:audioDeviceId }}/>
       </FullScreen>
 
     
