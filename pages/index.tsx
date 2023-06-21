@@ -151,7 +151,7 @@ export default function Home() {
    
        
         <Webcam style={{transition: ".3s all" , transform: `rotate(${rotate}deg)`, position: "absolute", left: "0", top:"0"}} ref={webcamRef} height={height} width={width} audio={audio}
-         videoConstraints={{ deviceId:videoDeviceId }}
+         videoConstraints={{ deviceId:videoDeviceId ,width:{ideal:rotate%180==0?width:height},height:{ideal:rotate%180==0?height:width}}}
           audioConstraints={{ deviceId:audioDeviceId }}/>
       </FullScreen>
 
