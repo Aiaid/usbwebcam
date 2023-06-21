@@ -1,2 +1,2 @@
 # usbwebcam
- A PWA wsbwebcam app
+ A PWA wsbwebcam app for viewing 

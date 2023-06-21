@@ -7,7 +7,8 @@ import Webcam from "react-webcam";
 import React,{ useState, useRef, useCallback, useEffect} from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { Button, FloatButton , Modal, Space, Tabs, Typography} from 'antd';
-import { FullscreenOutlined,InfoCircleOutlined, FullscreenExitOutlined,AudioOutlined,AudioMutedOutlined,VideoCameraOutlined} from '@ant-design/icons';
+import { FullscreenOutlined,InfoCircleOutlined, FullscreenExitOutlined,
+  RotateRightOutlined, AudioOutlined,AudioMutedOutlined,VideoCameraOutlined} from '@ant-design/icons';
 import Head from 'next/head';
 const { Title } = Typography;
 
@@ -19,6 +20,7 @@ export default function Home() {
   const [audioDevices, setAudioDevices] = useState<Array<any>>([]);
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
+  const [rotate, setRotate] = useState(0)
   const [audio, setAudio] = useState(true)
   const [fullscreen, setFullscreen]=useState(false)
   const [open, setOpen] = useState(false);
@@ -81,6 +83,7 @@ export default function Home() {
         <FloatButton icon={<InfoCircleOutlined />} onClick={()=>setAbout(true)} />
         <FloatButton icon={<VideoCameraOutlined />} onClick={()=>setOpen(true)} />
         <FloatButton icon={audio?<AudioOutlined />:<AudioMutedOutlined/>} onClick={()=>setAudio(!audio)}/>
+        <FloatButton icon={<RotateRightOutlined />} onClick={()=>setRotate((rotate+90)%360)} />
         <FloatButton icon={<FullscreenOutlined />} onClick={enterFullscreen} />
       </FloatButton.Group>
       <Modal
@@ -93,14 +96,14 @@ export default function Home() {
           <Title level={5}>Video Input</Title>
             <Space direction="vertical">
               {videoDevices.map((device,i) => (
-                  <Button key={"$i"} type={device.deviceId===videoDeviceId?"dashed":"default"} onClick={()=>setVideoDeviceId(device.deviceId)}>{device.label}</Button>
+                  <Button key={`${i}`} type={device.deviceId===videoDeviceId?"dashed":"default"} onClick={()=>setVideoDeviceId(device.deviceId)}>{device.label}</Button>
                 ))}
 
             </Space>
             <Title level={5}>Audio Input</Title>
             <Space direction="vertical">
               {audioDevices.map((device,i) => (
-                  <Button key={"$i"} type={device.deviceId===audioDeviceId?"dashed":"default"} onClick={()=>setAudioDeviceId(device.deviceId)}>{device.label}</Button>
+                  <Button key={`${i}`} type={device.deviceId===audioDeviceId?"dashed":"default"} onClick={()=>setAudioDeviceId(device.deviceId)}>{device.label}</Button>
                 ))}
 
             </Space>
@@ -142,11 +145,14 @@ export default function Home() {
 
         <FloatButton.Group shape="square" style={{ right: 24, visibility:fullscreen?"visible":"hidden"  }}>
           <FloatButton icon={audio?<AudioOutlined />:<AudioMutedOutlined/>} onClick={()=>setAudio(!audio)}/>
+          <FloatButton icon={<RotateRightOutlined />} onClick={()=>setRotate((rotate+90)%360)} />
           <FloatButton icon={<FullscreenExitOutlined />} onClick={exitFullscreen} />
         </FloatButton.Group>
    
        
-        <Webcam  ref={webcamRef} height={height} width={width} audio={audio} videoConstraints={{ deviceId:videoDeviceId }} audioConstraints={{ deviceId:audioDeviceId }}/>
+        <Webcam style={{transition: ".3s all" , transform: `rotate(${rotate}deg)`}} ref={webcamRef} height={height} width={width} audio={audio}
+         videoConstraints={{ deviceId:videoDeviceId }}
+          audioConstraints={{ deviceId:audioDeviceId }}/>
       </FullScreen>
 
     
