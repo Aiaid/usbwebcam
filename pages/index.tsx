@@ -150,7 +150,7 @@ export default function Home() {
         </FloatButton.Group>
    
        
-        <Webcam style={{transition: ".3s all" , transform: `rotate(${rotate}deg)`}} ref={webcamRef} height={height} width={width} audio={audio}
+        <Webcam style={{transition: ".3s all" , transform: `rotate(${rotate}deg)`, position: "absolute", left: "0", top:"0"}} ref={webcamRef} height={height} width={width} audio={audio}
          videoConstraints={{ deviceId:videoDeviceId }}
           audioConstraints={{ deviceId:audioDeviceId }}/>
       </FullScreen>
