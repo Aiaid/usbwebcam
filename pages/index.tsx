@@ -20,8 +20,8 @@ export default function Home() {
   const [audioDevices, setAudioDevices] = useState<Array<any>>([]);
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
-  const [inputWidth, setInputWidth] = useState(0)
-  const [inputHeight, setInputHeight] = useState(0)
+  const [inputWidth, setInputWidth] = useState(1920)
+  const [inputHeight, setInputHeight] = useState(1080)
   const [rotate, setRotate] = useState(0)
   const [audio, setAudio] = useState(true)
   const [fullscreen, setFullscreen]=useState(false)
@@ -160,7 +160,7 @@ export default function Home() {
    
        
         <Webcam style={{transitionDuration:"0.3s",
-         transform:`rotate(${rotate}deg)  scale(${rotate%180==0?1:height/width})`,
+         transform:`rotate(${rotate}deg)  scale(${rotate%180==0?1:inputHeight/inputWidth})`,
          position:"absolute",top:`${rotate%180==0?0:(height-width*inputWidth/inputHeight)/2}px`,
           display: "flex",margin:"auto", alignItems: "center"}} ref={webcamRef} height={height} width={width} audio={audio}
          videoConstraints={{ deviceId:videoDeviceId, height:{ideal:inputHeight},width:{ideal:inputWidth}}}
