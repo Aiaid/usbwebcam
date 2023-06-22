@@ -105,7 +105,7 @@ export default function Home() {
           
           <Title level={5}>Video Input Resolution</Title>
             <Space direction="vertical">
-              {[...Array(Math.ceil(inputResolution.length/4)).keys()].map((k,i) => (
+              {Array(Math.ceil(inputResolution.length/4)).fill(1).map((k,i) => (
                 <Space key={`${i}`}>
                   {inputResolution.slice(i*4, i*4+4).map((res,j) => (
                     <Button key={`${i*4+j}`} type={JSON.stringify(res)==JSON.stringify([inputWidth,inputHeight])?"dashed":"default"}
