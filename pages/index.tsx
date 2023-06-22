@@ -1,13 +1,13 @@
 "use client"
 
-// todo  about fill/contain/cover 
+// todo  about rotate 
 
 import Image from 'next/image'
 import Webcam from "react-webcam";
 import React,{ useState, useRef, useCallback, useEffect} from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { Button, FloatButton , Modal, Space, Tabs, Typography} from 'antd';
-import { FullscreenOutlined,InfoCircleOutlined, FullscreenExitOutlined,
+import { FullscreenOutlined,InfoCircleOutlined, FullscreenExitOutlined,ReloadOutlined,
   RotateRightOutlined, AudioOutlined,AudioMutedOutlined,VideoCameraOutlined} from '@ant-design/icons';
 import Head from 'next/head';
 const { Title } = Typography;
@@ -25,36 +25,47 @@ export default function Home() {
   const [rotate, setRotate] = useState(0)
   const [audio, setAudio] = useState(true)
   const [fullscreen, setFullscreen]=useState(false)
-  const [open, setOpen] = useState(false);
-  const [about, setAbout] = useState(false);
+  const [hidden, setHidden]=useState(false)
+  const [open, setOpen] = useState(false)
+  const [about, setAbout] = useState(false)
+  const [isIpad, setIsIpad] = useState(false)
+  const [isIphone, setIsIphone] = useState(false)
+  const [isInPWA, setIsInPWA] = useState(false)
   const webcamRef = useRef(null);
   const handle = useFullScreenHandle();
   const inputResolution=[[1920,1080],[1600,900],[1280,720],[848,480],[640,360],[1920,1440],[1600,1200],[1280,960],[640,480],[480,360]]
+  var timeout;
+
 
   const handleDevices = (deviceInfos:Array<any>)=>{
     setVideoDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
     setAudioDevices(deviceInfos.filter(({ kind }) => kind === "audioinput"))
   }
 
+
+
   useEffect(() => {
+    function Delayhide(){
+      clearTimeout(timeout)
+      setHidden(false)
+      timeout = setTimeout(()=>setHidden(true), 1000);
+    }
     function handleResize() {
       setWidth(window.innerWidth )
       setHeight( window.innerHeight )
     }
-    const handleDevices = (deviceInfos:Array<any>)=>{
-      setVideoDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
-      setAudioDevices(deviceInfos.filter(({ kind }) => kind === "audioinput"))
-    }
-    
-    
     window.addEventListener("resize", handleResize)
-    
+    window.addEventListener("mousemove", Delayhide)
     handleResize()
     navigator.mediaDevices.enumerateDevices().then(handleDevices)
+    setIsIphone(/iPhone/.test(navigator.platform))
+    setIsIpad(/iPad/.test(navigator.platform)||navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    setIsInPWA(window.matchMedia('(display-mode: fullscreen)').matches)
     return () => { 
+      window.removeEventListener("mousemove", Delayhide)
       window.removeEventListener("resize", handleResize)
     }
-  }, [setWidth,setHeight,handleDevices,setVideoDevices,setAudioDevices])
+  }, [])
 
 
   function enterFullscreen(){
@@ -77,16 +88,16 @@ export default function Home() {
         <FloatButton icon={<VideoCameraOutlined />} onClick={()=>setOpen(true)} />
         <FloatButton icon={audio?<AudioOutlined />:<AudioMutedOutlined/>} onClick={()=>setAudio(!audio)}/>
         <FloatButton icon={<RotateRightOutlined />} onClick={()=>setRotate((rotate+90)%360)} />
-        <FloatButton icon={<FullscreenOutlined />} onClick={enterFullscreen} />
+        {!(isIphone||isInPWA)&&<FloatButton icon={<FullscreenOutlined />} onClick={enterFullscreen} />}
       </FloatButton.Group>
       <Modal
           open={open&&!fullscreen}
           onCancel={()=>setOpen(false)}
           // title="Camera"
-          footer={null}
+          footer={[ <Button  onClick={()=>navigator.mediaDevices.enumerateDevices().then(handleDevices)}>{<ReloadOutlined />}</Button>]}
         >
           <Space direction="vertical">
-            <Space>
+            <Space align="start">
               <Space direction="vertical">
                 <Title level={5}>Video Input</Title>
                 {videoDevices.map((device,i) => (
@@ -152,7 +163,7 @@ export default function Home() {
       <FullScreen handle={handle}>
         
 
-        <FloatButton.Group shape="square" style={{ right: 24, visibility:fullscreen?"visible":"hidden"  }}>
+        <FloatButton.Group shape="square" style={{ right: 24, visibility:fullscreen?"visible":"hidden",opacity:hidden?"0":"1", transition: "opacity .3s ease-in-out",  }}>
           <FloatButton icon={audio?<AudioOutlined />:<AudioMutedOutlined/>} onClick={()=>setAudio(!audio)}/>
           <FloatButton icon={<RotateRightOutlined />} onClick={()=>setRotate((rotate+90)%360)} />
           <FloatButton icon={<FullscreenExitOutlined />} onClick={exitFullscreen} />
@@ -160,8 +171,8 @@ export default function Home() {
    
        
         <Webcam style={{transitionDuration:"0.3s",
-         transform:`rotate(${rotate}deg)  scale(${rotate%180==0?1:inputHeight/inputWidth})`,
-         position:"absolute",top:`${rotate%180==0?0:(height-width*inputWidth/inputHeight)/2}px`,
+         transform:`rotate(${rotate}deg)  scale(${rotate%180==0?1:isIpad&&width>height?inputHeight/inputWidth:inputWidth/inputHeight})`,
+         position:"absolute",top:`${rotate%180==0?0:isIpad&&width>height?(height-width*inputWidth/inputHeight)/2:(width*(inputWidth/inputHeight-inputHeight/inputWidth))/2}px`,
           display: "flex",margin:"auto", alignItems: "center"}} ref={webcamRef} height={height} width={width} audio={audio}
          videoConstraints={{ deviceId:videoDeviceId, height:{ideal:inputHeight},width:{ideal:inputWidth}}}
           audioConstraints={{ deviceId:audioDeviceId }}/>
