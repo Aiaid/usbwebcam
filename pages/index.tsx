@@ -18,8 +18,8 @@ export default function Home() {
   const [videoDevices, setVideoDevices] = useState<Array<any>>([]);
   const [audioDeviceId, setAudioDeviceId] = useState<any>(null);
   const [audioDevices, setAudioDevices] = useState<Array<any>>([]);
-  const [width, setWidth] = useState(1920)
-  const [height, setHeight] = useState(1080)
+  const [width, setWidth] = useState(0)
+  const [height, setHeight] = useState(0)
   const [rotate, setRotate] = useState(0)
   const [audio, setAudio] = useState(true)
   const [fullscreen, setFullscreen]=useState(false)
@@ -48,18 +48,18 @@ export default function Home() {
       setWidth(window.innerWidth )
       setHeight( window.innerHeight )
     }
-    // const handleDevices = (deviceInfos:Array<any>)=>{
-    //   setVideoDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
-    //   setAudioDevices(deviceInfos.filter(({ kind }) => kind === "audioinput"))
-    // }
+    const handleDevices = (deviceInfos:Array<any>)=>{
+      setVideoDevices(deviceInfos.filter(({ kind }) => kind === "videoinput"))
+      setAudioDevices(deviceInfos.filter(({ kind }) => kind === "audioinput"))
+    }
     
     
-    // window.addEventListener("resize", handleResize)
+    window.addEventListener("resize", handleResize)
     
-    // handleResize()
+    handleResize()
     navigator.mediaDevices.enumerateDevices().then(handleDevices)
     return () => { 
-      // window.removeEventListener("resize", handleResize)
+      window.removeEventListener("resize", handleResize)
     }
   }, [setWidth,setHeight,handleDevices,setVideoDevices,setAudioDevices])
 
@@ -152,8 +152,11 @@ export default function Home() {
         </FloatButton.Group>
    
        
-        <Webcam style={{transition: ".3s all" , transform: `rotate(0deg)`}} ref={webcamRef} height={height} width={width} audio={audio}
-         videoConstraints={{ deviceId:videoDeviceId ,width:{ideal:rotate%180==0?width:height},height:{ideal:rotate%180==0?height:width}}}
+        <Webcam style={{transitionDuration:"0.3s",
+         transform:`rotate(${rotate}deg)  scale(${rotate%180==0?1:0.66666667})`,
+         position:"absolute",top:`${rotate%180==0?0:height-width}px`,
+          display: "flex",margin:"auto", alignItems: "center"}} ref={webcamRef} height={height} width={width} audio={audio}
+         videoConstraints={{ deviceId:videoDeviceId }}
           audioConstraints={{ deviceId:audioDeviceId }}/>
       </FullScreen>
 
