@@ -34,7 +34,7 @@ export default function Home() {
   const webcamRef = useRef(null);
   const handle = useFullScreenHandle();
   const inputResolution=[[1920,1080],[1600,900],[1280,720],[848,480],[640,360],[1920,1440],[1600,1200],[1280,960],[640,480],[480,360]]
-  var timeout;
+  var timeout:any;
 
 
   const handleDevices = (deviceInfos:Array<any>)=>{
