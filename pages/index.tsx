@@ -60,6 +60,7 @@ export default function Home() {
     navigator.mediaDevices.enumerateDevices().then(handleDevices)
     setIsIphone(/iPhone/.test(navigator.platform))
     setIsIpad(/iPad/.test(navigator.platform)||navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    if(isInPWA){setRotate(270)}
     setIsInPWA(window.matchMedia('(display-mode: fullscreen)').matches)
     return () => { 
       window.removeEventListener("mousemove", Delayhide)
@@ -83,7 +84,7 @@ export default function Home() {
         <title>USB webcam</title>
       </Head>
       
-      <FloatButton.Group shape="square" style={{ right: 24, visibility:!fullscreen?"visible":"hidden"  }}>
+      <FloatButton.Group shape="square" style={{ right: 24, visibility:!fullscreen?"visible":"hidden" ,opacity:hidden&&(isInPWA||isIphone)?"0":"1", transition: "opacity .3s ease-in-out",  }}>
         <FloatButton icon={<InfoCircleOutlined />} onClick={()=>setAbout(true)} />
         <FloatButton icon={<VideoCameraOutlined />} onClick={()=>setOpen(true)} />
         <FloatButton icon={audio?<AudioOutlined />:<AudioMutedOutlined/>} onClick={()=>setAudio(!audio)}/>
