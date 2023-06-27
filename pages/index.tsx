@@ -188,7 +188,7 @@ export default function Home() {
          position:"absolute",top:`${rotate%180==0?0:isIpad&&width>height?(height-width*inputWidth/inputHeight)/2:(width*(inputWidth/inputHeight-inputHeight/inputWidth))/2}px`,
           display: "flex",margin:"auto", alignItems: "center"}} ref={webcamRef} height={height} width={width} audio={audio}
          videoConstraints={{ deviceId:videoDeviceId, height:{ideal:inputHeight},width:{ideal:inputWidth}}}
-          audioConstraints={{ deviceId:audioDeviceId }}/>
+          audioConstraints={{ deviceId:audioDeviceId, echoCancellation:false,noiseSuppression:false}}/>
       </FullScreen>
 
     
