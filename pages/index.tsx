@@ -48,7 +48,7 @@ export default function Home() {
     function Delayhide(){
       clearTimeout(timeout)
       setHidden(false)
-      timeout = setTimeout(()=>setHidden(true), 1000);
+      timeout = setTimeout(()=>setHidden(true), 3000);
     }
     function handleResize() {
       setWidth(window.innerWidth )
