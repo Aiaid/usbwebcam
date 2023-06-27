@@ -22,6 +22,7 @@ export default function Home() {
   const [height, setHeight] = useState(0)
   const [inputWidth, setInputWidth] = useState(1920)
   const [inputHeight, setInputHeight] = useState(1080)
+  const [inputFrameRate, setInputFrameRate] = useState(30)
   const [rotate, setRotate] = useState(0)
   const [audio, setAudio] = useState(true)
   const [fullscreen, setFullscreen]=useState(false)
@@ -34,6 +35,7 @@ export default function Home() {
   const webcamRef = useRef(null);
   const handle = useFullScreenHandle();
   const inputResolution=[[1920,1080],[1600,900],[1280,720],[848,480],[640,360],[1920,1440],[1600,1200],[1280,960],[640,480],[480,360]]
+  const inputFrameRates=[10,15,25,30,50,60]
   var timeout:any;
 
 
@@ -129,6 +131,13 @@ export default function Home() {
             </Space>
           
           </Space>
+          <Title level={5}>Video Input Resolution</Title>
+          <Space >
+            {inputFrameRates.map((r,j) => (
+              <Button key={`${j}`} type={r==inputFrameRate?"dashed":"default"}
+              onClick={()=>setInputFrameRate(r)}>{r}</Button>
+            ))}
+          </Space>
           
         </Modal>
         <Modal
@@ -142,7 +151,7 @@ export default function Home() {
             <Paragraph>A PWA app for viewing USB webcams or capture cards. With fellow feature:
             <ul>
               <li>
-                Select Video input and resolution
+                Select Video input, resolution and framerate
               </li>
               <li>
                 Select Audio input or mute
@@ -187,7 +196,7 @@ export default function Home() {
          transform:`rotate(${rotate}deg)  scale(${rotate%180==0?1:isIpad&&width>height?inputHeight/inputWidth:inputWidth/inputHeight})`,
          position:"absolute",top:`${rotate%180==0?0:isIpad&&width>height?(height-width*inputWidth/inputHeight)/2:(width*(inputWidth/inputHeight-inputHeight/inputWidth))/2}px`,
           display: "flex",margin:"auto", alignItems: "center"}} ref={webcamRef} height={height} width={width} audio={audio}
-         videoConstraints={{ deviceId:videoDeviceId, height:{ideal:inputHeight},width:{ideal:inputWidth}}}
+         videoConstraints={{ deviceId:videoDeviceId, height:{ideal:inputHeight},width:{ideal:inputWidth},frameRate:{ideal:inputFrameRate}}}
           audioConstraints={{ deviceId:audioDeviceId, echoCancellation:false,noiseSuppression:false}}/>
       </FullScreen>
 
