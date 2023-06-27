@@ -10,7 +10,7 @@ import { Button, FloatButton , Modal, Space, Tabs, Typography} from 'antd';
 import { FullscreenOutlined,InfoCircleOutlined, FullscreenExitOutlined,ReloadOutlined,
   RotateRightOutlined, AudioOutlined,AudioMutedOutlined,VideoCameraOutlined} from '@ant-design/icons';
 import Head from 'next/head';
-const { Title } = Typography;
+const { Title, Paragraph, Text, Link } = Typography;
 
 
 export default function Home() {
@@ -137,27 +137,39 @@ export default function Home() {
           // title="About"
           footer={null}
         >
-          <Tabs
-            defaultActiveKey="1"
-            centered
-            items={[ 
-              {
-                label: `About`,
-                key: "about",
-                children: `Content of Tab Pane 1`,
-              },
-              {
-                label: `FAQ`,
-                key: "faq",
-                children: `Content of Tab Pane 1`,
-              },
-              {
-                label: `LICENSE`,
-                key: "LICENSE",
-                children: `Content of Tab Pane 1`,
-              },
-            ]}
-          />
+          <Typography>
+            <Title>USB webcam</Title>
+            <Paragraph>A PWA app for viewing USB webcams or capture cards. With fellow feature:
+            <ul>
+              <li>
+                Select Video input and resolution
+              </li>
+              <li>
+                Select Audio input or mute
+              </li>
+              <li>
+                Rotation
+              </li>
+              <li>
+                PWA Offline mode
+              </li>
+            </ul>
+            <Link href="https://github.com/Aiaid/usbwebcam">GitHub</Link>   <Link href="mailto:anend@live.com">Author</Link>
+            </Paragraph>
+            <Title level={2}>Known issues</Title>
+            <Paragraph>
+            <ul>
+              <li>
+              No full screen on iPhone
+              <br/>
+              Iphone safari and Chrome don't support fullscreen https://caniuse.com/fullscreen
+              </li>
+              <li>
+              No full screen on IOS in PWA mode
+              </li>
+            </ul>
+            </Paragraph>
+          </Typography>
           
         </Modal>
 
