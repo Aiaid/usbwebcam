@@ -5,7 +5,7 @@
 import Image from 'next/image'
 import Webcam from "react-webcam";
 import React,{ useState, useRef, useCallback, useEffect} from 'react';
-import { FullScreen, useFullScreenHandle } from "react-full-screen";
+import { FullScreen, FullScreenHandle, useFullScreenHandle } from "react-full-screen";
 import { Button, FloatButton , Modal, Space, Tabs, Typography} from 'antd';
 import { FullscreenOutlined,InfoCircleOutlined, FullscreenExitOutlined,ReloadOutlined,
   RotateRightOutlined, AudioOutlined,AudioMutedOutlined,VideoCameraOutlined} from '@ant-design/icons';
@@ -84,7 +84,7 @@ export default function Home() {
         <title>USB webcam</title>
       </Head>
       
-      <FloatButton.Group shape="square" style={{ right: 24, visibility:!fullscreen?"visible":"hidden" ,opacity:hidden&&(isInPWA||isIphone)?"0":"1", transition: "opacity .3s ease-in-out",  }}>
+      <FloatButton.Group shape="square" style={{ right: 24, visibility:!fullscreen?"visible":"hidden" ,opacity:hidden?"0":"1", transition: "opacity .3s ease-in-out",  }}>
         <FloatButton icon={<InfoCircleOutlined />} onClick={()=>setAbout(true)} />
         <FloatButton icon={<VideoCameraOutlined />} onClick={()=>setOpen(true)} />
         <FloatButton icon={audio?<AudioOutlined />:<AudioMutedOutlined/>} onClick={()=>setAudio(!audio)}/>
@@ -161,7 +161,7 @@ export default function Home() {
           
         </Modal>
 
-      <FullScreen handle={handle}>
+      <FullScreen handle={handle} onChange={(state: boolean, handle: FullScreenHandle)=>{setFullscreen(state)}}>
         
 
         <FloatButton.Group shape="square" style={{ right: 24, visibility:fullscreen?"visible":"hidden",opacity:hidden?"0":"1", transition: "opacity .3s ease-in-out",  }}>
